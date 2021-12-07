@@ -158,9 +158,9 @@ func (p *portal) setupRouter() error {
 	}
 
 	aadAuthenticatedRouter := r.NewRoute().Subrouter()
-	aadAuthenticatedRouter.Use(p.aad.AAD)
+	// aadAuthenticatedRouter.Use(p.aad.AAD)
 	aadAuthenticatedRouter.Use(middleware.Log(p.env, p.audit, p.baseAccessLog))
-	aadAuthenticatedRouter.Use(p.aad.CheckAuthentication)
+	// aadAuthenticatedRouter.Use(p.aad.CheckAuthentication)
 	aadAuthenticatedRouter.Use(csrf.Protect(p.sessionKey, csrf.SameSite(csrf.SameSiteStrictMode), csrf.MaxAge(0)))
 
 	p.aadAuthenticatedRoutes(aadAuthenticatedRouter)
@@ -254,7 +254,9 @@ func (p *portal) aadAuthenticatedRoutes(r *mux.Router) {
 		if name == "index.html" {
 			continue
 		}
-
+		p.log.Warn("YOOO")
+		p.log.Warn(name)
+		// p.log.Warn(p.index)
 		r.NewRoute().Methods(http.MethodGet).Path("/" + name).HandlerFunc(p.serve(name))
 	}
 
