@@ -8,20 +8,17 @@
         "fpServicePrincipalId": {
             "type": "string"
         },
-        "fpRoleDefinitionId": {
-            "type": "string",
-            "defaultValue": "79ed474a-7267-4ff8-b226-96140be062a2"
-        },
         "devServicePrincipalId":{
             "type": "string"
         }
     },
     "resources": [
         {
-            "name": "[parameters('fpRoleDefinitionId')]",
+            "name": "79ed474a-7267-4ff8-b226-96140be062cf",
             "type": "Microsoft.Authorization/roleDefinitions",
+            // ARO v4 Development First Party Subscription Custom Role
             "properties": {
-                "roleName": "ARO v4 Development First Party Subscription (DEV)",
+                "roleName": "ARO v4 Development First Party Subscription CF",
                 "permissions": [
                     {
                         "actions": [
@@ -39,11 +36,11 @@
             "name": "[guid(subscription().id, 'FP / ARO v4 FP Subscription')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "dependsOn": [
-                "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('fpRoleDefinitionId'))]"
+                "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '79ed474a-7267-4ff8-b226-96140be062cf')]"
             ],
             "properties": {
                 "scope": "[subscription().id]",
-                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('fpRoleDefinitionId'))]",
+                "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '79ed474a-7267-4ff8-b226-96140be062cf')]",
                 "principalId": "[parameters('fpServicePrincipalId')]",
                 "principalType": "ServicePrincipal"
             },
@@ -54,6 +51,7 @@
             "type": "Microsoft.Authorization/roleAssignments",
             "properties": {
                 "scope": "[subscription().id]",
+                //  USER ACCESS ADMINISTRATOR BUILT IN ROLE: 18d7d88d-d35e-4fb5-a5c3-7773c20a72d9
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9')]",
                 "principalId": "[parameters('armServicePrincipalId')]",
                 "principalType": "ServicePrincipal"
@@ -65,6 +63,7 @@
             "type": "Microsoft.Authorization/roleAssignments",
             "properties": {
                 "scope": "[subscription().id]",
+                // Contributor BUILT IN ROLE 
                 "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
                 "principalId": "[parameters('devServicePrincipalId')]",
                 "principalType": "ServicePrincipal"
