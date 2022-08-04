@@ -168,20 +168,6 @@
                 "description": "Specifies the address prefix of the subnet hosting the pods of the AKS cluster."
             }
         },
-        "gatewaySubnetName": {
-            "type": "string",
-            "defaultValue": "GatewaySubnet",
-            "metadata": {
-                "description": "Subnet name that will contain the App Service Environment"
-            }
-        },
-        "gatewaySubnetPrefix": {
-            "type": "string",
-            "defaultValue": "10.128.0.0/24",
-            "metadata": {
-                "description": "Subnet address prefix"
-            }
-        },
         "serviceCidr": {
             "type": "string",
             "defaultValue": "10.130.0.0/16",
@@ -465,18 +451,6 @@
                 "remoteVirtualNetwork": {
                     "id": "[resourceId('Microsoft.Network/virtualNetworks', 'dev-vpn-vnet')]"
                 }
-            }
-        },
-        {
-            "name": "aks-vpn-pip",
-            "type": "Microsoft.Network/publicIPAddresses",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2020-08-01",
-            "sku": {
-                "name": "Basic"
-            },
-            "properties": {
-                "publicIPAllocationMethod": "Dynamic"
             }
         },
         {
