@@ -77,8 +77,7 @@ deploy_aks_dev() {
         --parameters \
             "adminObjectId=$ADMIN_OBJECT_ID" \
             "dnsZone=$DOMAIN_NAME" \
-            "sshRSAPublicKey=$(<secrets/proxy_id_rsa.pub)" \
-            "vpnCACertificate=$(base64 -w0 <secrets/vpn-ca.crt)" >/dev/null
+            "sshRSAPublicKey=$(<secrets/proxy_id_rsa.pub)" >/dev/null
 }
 
 deploy_env_dev_override() {
