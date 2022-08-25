@@ -335,12 +335,6 @@
                                 }
                             ]
                         }
-                    },
-                    {
-                        "name": "[parameters('gatewaySubnetName')]",
-                        "properties": {
-                            "addressPrefix": "[parameters('gatewaySubnetPrefix')]"
-                        }
                     }
                 ]
             }
