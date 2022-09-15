@@ -30,7 +30,7 @@ from .._vendor import _convert_request, _format_url_section
 
 if TYPE_CHECKING:
     # pylint: disable=unused-import,ungrouped-imports
-    from typing import Any, Callable, Dict, Optional, TypeVar
+    from typing import Any, Callable, Dict, List, Optional, TypeVar
     T = TypeVar('T')
     ClsType = Optional[Callable[[PipelineResponse[HttpRequest, HttpResponse], T, Dict[str, Any]], Any]]
 
@@ -38,7 +38,7 @@ _SERIALIZER = Serializer()
 _SERIALIZER.client_side_validation = False
 # fmt: off
 
-def build_install_versions_request(
+def build_list_request(
     subscription_id,  # type: str
     location,  # type: str
     **kwargs  # type: Any
@@ -73,8 +73,8 @@ def build_install_versions_request(
     )
 
 # fmt: on
-class ListOperations(object):
-    """ListOperations operations.
+class InstallVersionsOperations(object):
+    """InstallVersionsOperations operations.
 
     You should not instantiate this class directly. Instead, you should create a Client instance that
     instantiates it for you and attaches it as an attribute.
@@ -96,12 +96,12 @@ class ListOperations(object):
         self._config = config
 
     @distributed_trace
-    def install_versions(
+    def list(
         self,
         location,  # type: str
         **kwargs  # type: Any
     ):
-        # type: (...) -> Any
+        # type: (...) -> List[str]
         """Lists all OpenShift versions available to install in the specified location.
 
         The operation returns the installable OpenShift versions as strings.
@@ -109,11 +109,11 @@ class ListOperations(object):
         :param location: The name of Azure region.
         :type location: str
         :keyword callable cls: A custom type or function that will be passed the direct response
-        :return: any, or the result of cls(response)
-        :rtype: any
+        :return: list of str, or the result of cls(response)
+        :rtype: list[str]
         :raises: ~azure.core.exceptions.HttpResponseError
         """
-        cls = kwargs.pop('cls', None)  # type: ClsType[Any]
+        cls = kwargs.pop('cls', None)  # type: ClsType[List[str]]
         error_map = {
             401: ClientAuthenticationError, 404: ResourceNotFoundError, 409: ResourceExistsError
         }
@@ -122,11 +122,11 @@ class ListOperations(object):
         api_version = kwargs.pop('api_version', "2022-09-04")  # type: str
 
         
-        request = build_install_versions_request(
+        request = build_list_request(
             subscription_id=self._config.subscription_id,
             location=location,
             api_version=api_version,
-            template_url=self.install_versions.metadata['url'],
+            template_url=self.list.metadata['url'],
         )
         request = _convert_request(request)
         request.url = self._client.format_url(request.url)
@@ -142,12 +142,12 @@ class ListOperations(object):
             map_error(status_code=response.status_code, response=response, error_map=error_map)
             raise HttpResponseError(response=response, error_format=ARMErrorFormat)
 
-        deserialized = self._deserialize('object', pipeline_response)
+        deserialized = self._deserialize('[str]', pipeline_response)
 
         if cls:
             return cls(pipeline_response, deserialized, {})
 
         return deserialized
 
-    install_versions.metadata = {'url': "/subscriptions/{subscriptionId}/providers/Microsoft.RedHatOpenShift/locations/{location}/listinstallversions"}  # type: ignore
+    list.metadata = {'url': "/subscriptions/{subscriptionId}/providers/Microsoft.RedHatOpenShift/locations/{location}/listinstallversions"}  # type: ignore
 
