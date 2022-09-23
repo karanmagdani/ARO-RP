@@ -322,11 +322,13 @@ func (c *Cluster) Create(ctx context.Context, vnetResourceGroup, clusterName str
 		if err != nil {
 			return err
 		}
-
-		c.log.Info("peering subnets to CI infra")
-		err = c.peerSubnetsToCI(ctx, vnetResourceGroup, clusterName)
-		if err != nil {
-			return err
+		// Only peer when local development mode is active
+		if env.IsLocalDevelopmentMode() {
+			c.log.Info("peering subnets to CI infra")
+			err = c.peerSubnetsToCI(ctx, vnetResourceGroup, clusterName)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -381,13 +383,15 @@ func (c *Cluster) Delete(ctx context.Context, vnetResourceGroup, clusterName str
 				errs = append(errs, err)
 			}
 		}
-		// Only do this if CI=true and cloud = Public Cloud
-		r, err := azure.ParseResourceID(c.ciParentVnet)
-		if err == nil {
-			err = c.ciParentVnetPeerings.DeleteAndWait(ctx, r.ResourceGroup, r.ResourceName, vnetResourceGroup+"-peer")
-		}
-		if err != nil {
-			errs = append(errs, err)
+		// Only peer when local development mode is active
+		if env.IsLocalDevelopmentMode() {
+			r, err := azure.ParseResourceID(c.ciParentVnet)
+			if err == nil {
+				err = c.ciParentVnetPeerings.DeleteAndWait(ctx, r.ResourceGroup, r.ResourceName, vnetResourceGroup+"-peer")
+			}
+			if err != nil {
+				errs = append(errs, err)
+			}
 		}
 	} else {
 		// Deleting the deployment does not clean up the associated resources
